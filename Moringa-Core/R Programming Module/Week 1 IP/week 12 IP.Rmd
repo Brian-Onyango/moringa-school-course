@@ -1,0 +1,383 @@
+---
+title: "Cryptography Course Advertisement Ad Analysis"
+author: "Brian Onyango"
+date: '2022-05-27'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+A Kenyan entrepreneur has created an online cryptography course and would want to advertise it on her blog. She currently targets audiences originating from various countries. In the past, she ran ads to advertise a related course on the same blog and collected data in the process. She would now like to employ your services as a Data Science Consultant to help her identify which individuals are most likely to click on her ads. 
+
+## Specifying the Question
+Which individuals are most likely to clink on course advertisement ads?
+
+## Defining the Metric for Success
+This project will be successful if we will be able to determine factors that lead to a user to click an ad.
+
+## Understanding the Context
+Ad Clicks, or simply Clicks, is a marketing metric that counts the number of times users have clicked on a digital advertisement to reach an online property.If you have a campaign running, you are probably able to access click data on each specific ad. You may see data like this: Ad 1: 4,686 clicks Ad 2: 1,248 clicks Ad 3: 984 clicks You can see that Ad 1 is the higher performing ad by clicks. You may want to evaluate this ad and figure out why audiences tend to click on it more. You may also want to review Ad 3 and try to determine why it is not receiving as many clicks.
+
+## Recording the Experimental Design
+
+1. Data sourcing/loading
+2. Data Understanding
+3. Data Relevance
+4. External Dataset Validation
+5. Data Preparation
+6. Univariate Analysis
+7. Bivariate Analysis
+8. Multivariate Analysis
+9. Conclusion
+10. Recommendations
+
+## Data Relevance
+The dataset avialed the client can be downloaded from this link <http://bit.ly/IPAdvertisingData>
+
+Loading the Dataset
+```{r}
+df <- read.csv('http://bit.ly/IPAdvertisingData')
+```
+Previewing the top of our dataset
+```{r}
+head(df)
+```
+Previewing the bottom of the dataset
+```{r}
+tail(df)
+```
+Checking the data types
+```{r}
+# Data set structure.
+str(df)
+```
+## Data Preparation
+### Validity
+```{r}
+# checking for unnecesary columns 
+colnames(df)
+```
+ columns seems necessary for this study
+```{r}
+# Checking for anomalies
+summary(df)
+```
+ there are no anomalies in the data set
+ 
+### Consistency
+```{r}
+# checking for missing values
+colSums(is.na(df))
+```
+ there are no missing values
+ 
+### Completeness
+```{r}
+# checking for duplicates
+sum(duplicated(df))
+```
+there are no duplicates in this dataset
+
+### Uniformity
+```{r}
+# Checking column names uniformity
+colnames(df)
+```
+the column names are uniform
+
+### Outliers
+Using boxplots to check for outliersin numerical columns
+```{r}
+# Area.Income column
+boxplot(df$Area.Income, data=df, main ="Area Income", ylab = 'Count', horizontal = TRUE)
+```
+```{r}
+# Daily.Time.Spent.on.Site column
+boxplot(df$Daily.Time.Spent.on.Site, data=df, main ="Daily.Time.Spent.on.Site", ylab = 'Count', horizontal = TRUE)
+```
+```{r}
+# Age
+boxplot(df$Age, data=df, main ="Age", ylab = 'Count', horizontal = TRUE)
+```
+```{r}
+# Daily.Internet.Usage
+boxplot(df$Daily.Internet.Usage, data=df, main ="Daily.Internet.Usage", ylab = 'Count', horizontal = TRUE)
+```
+from the boxplots, Area income column has outliers but we will keep them for futher analysis
+## Exploratory Data Analysis
+### Univariate Analysis
+#### Categorical Analysis
+
+Analysis using Countplots
+```{r}
+# 
+library(ggplot2)
+ggplot(df, aes(x=Male)) + geom_bar(fill=rgb(0.4,0.1,0.5))
+```
+ther are more females than males 
+```{r}
+ggplot(df, aes(x=factor(`Clicked.on.Ad`))) + geom_bar( fill=rgb(0.6,0.4,0.4))
+```
+the number of people who clicked the ad is equal to those who did not click
+
+Analysis using Histograms
+```{r}
+# Age column
+hist(df$Age)
+```
+```{r}
+# Area.Income column
+hist(df$Area.Income)
+```
+```{r}
+# Daily.Time.Spent.on.Site column
+hist(df$Daily.Time.Spent.on.Site)
+```
+```{r}
+# Daily.Internet.Usage column
+hist(df$Daily.Internet.Usage)
+```
+#### Numerical Analysis
+Measures of Central Tendency
+Mean
+```{r}
+# Mean of all numeric columns
+colMeans(df[sapply(df,is.numeric)])
+```
+Median
+```{r}
+# Median of Daily.Time.Spent
+median <- median(df$Daily.Time.Spent.on.Site)
+print(median)
+```
+```{r}
+# Median of Age
+median <- median(df$Age)
+print(median)
+```
+```{r}
+# Median of Area.Income
+median <- median(df$Area.Income)
+print(median)
+```
+```{r}
+# Median of Area.Income
+median <- median(df$Daily.Internet.Usage)
+print(median)
+```
+Mode
+```{r}
+# Creating the mode function
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]}
+```
+
+```{r}
+# Age Mode
+getmode(df$Age)
+```
+```{r}
+# Daily.Time.Spent.on.Site Mode
+getmode(df$Daily.Time.Spent.on.Site)
+```
+```{r}
+# Area.Income Mode
+getmode(df$Area.Income)
+```
+```{r}
+# Daily.Internet.Usage Mode
+getmode(df$Daily.Internet.Usage)
+```
+```{r}
+# City Mode
+getmode(df$City)
+```
+```{r}
+# Ad.Topic.Line Mode
+getmode(df$Ad.Topic.Line)
+```
+```{r}
+# Country Mode
+getmode(df$Country)
+```
+```{r}
+# Timestamp Mode
+getmode(df$Timestamp)
+```
+Varience
+```{r}
+# varience in Age
+var(df$Age)
+```
+```{r}
+# Daily.Time.Spent.on.Site varience
+var(df$Daily.Time.Spent.on.Site)
+```
+```{r}
+# Area.Income varience
+var(df$Area.Income)
+```
+```{r}
+# Daily.Internet.Usage varience
+var(df$Daily.Internet.Usage)
+```
+Standard Deviation
+```{r}
+# Age SD
+sd(df$Age)
+```
+```{r}
+# Daily.Time.Spent.on.Site SD
+sd(df$Daily.Time.Spent.on.Site)
+```
+```{r}
+# Area.Income SD
+sd(df$Area.Income)
+```
+```{r}
+# Daily.Internet.Usage SD
+sd(df$Daily.Internet.Usage)
+```
+Quantiles
+```{r}
+# Age quantiles
+quantile(df$Age)
+```
+```{r}
+# Daily.Time.Spent.on.Site quantiles
+quantile(df$Daily.Time.Spent.on.Site)
+```
+```{r}
+# Area.Income quantiles
+quantile(df$Area.Income)
+```
+```{r}
+# Daily.Internet.Usage quantiles
+quantile(df$Daily.Internet.Usage)
+```
+### Bivariate Analysis
+
+#### Pair Ggplots
+```{r}
+# Clicked.on.Ad vs Area.Income
+ggplot(data = df, aes(x = Area.Income, fill = Clicked.on.Ad))+
+        geom_histogram(bins  =20,col = "orange")+
+        labs(title = "Income Distribution", x = "Area Income", y= "Frequency", fill = "Clicked on Ad")+ scale_color_brewer(
+                palette = "Set1"
+        )
+```
+```{r}
+# Clicked.on.Ad vs Age
+ggplot(data = df, aes(x = Age, fill = Clicked.on.Ad))+
+        geom_histogram(bins  =20,col = "orange")+
+        labs(title = "Age Distribution", x = "Age", y= "Frequency", fill = "Clicked on Ad")+ scale_color_brewer(
+                palette = "Set1"
+        )
+```
+```{r}
+# Clicked.on.Ad vs Daily.Time.Spent.on.Site
+ggplot(data = df, aes(x =Daily.Time.Spent.on.Site, fill = Clicked.on.Ad))+
+        geom_histogram(bins  =20,col = "orange")+
+        labs(title = "Daily Time Spent on Site", x = "Time Spent on Site", y= "Frequency", fill = "Clicked on Ad")+ scale_color_brewer(
+                palette = "Set1"
+        )
+```
+#### Scatter Plots
+```{r}
+# Scatter plot and correlation function
+scatter.plt <- function(col1, col2, corr1, corr2, data, title){
+data <- ggplot(data, aes(x = {{col1}}, y= {{col2}})) + geom_point(color = '#281E5D') + ggtitle(paste(title, 'Scatter Plot')) + theme(plot.title = element_text(hjust = 0.5))
+correlation <- cor(df[ , c(corr1)], df[, c(corr2)])
+plot(data)
+print(paste0('Correlation = ', correlation, '.'))
+}
+```
+
+Age Vs Daily Internet Usage
+```{r}
+scatter.plt(Daily.Internet.Usage, Age, data = df, corr1 = 'Daily.Internet.Usage', corr2 = 'Age', 'Age Vs Daily Internet Usage')
+```
+Age Vs Daily Time Spent on Site
+```{r}
+scatter.plt(Daily.Time.Spent.on.Site, Age, data = df, corr1 = 'Daily.Time.Spent.on.Site', corr2 = 'Age', 'Age Vs Daily Time Spent on Site')
+```
+Age Vs Area Income
+```{r}
+scatter.plt(Area.Income, Age, data = df, corr1 = 'Area.Income', corr2 = 'Age', 'Age Vs Area Income')
+```
+### Multivariate Analysis
+
+#### Correlation matrix
+
+
+```{r}
+library(ggcorrplot)
+corr <- dplyr::select(df,Age,Area.Income,Clicked.on.Ad,Daily.Internet.Usage,Daily.Time.Spent.on.Site,Male )
+ggcorrplot(cor(corr), lab = TRUE, title = 'Correlation Heatmap', colors = c('#022D36', 'white', '#48AAAD'))
+```
+
+#### Scatter Plots
+```{r}
+ggplot(df, aes(Area.Income,Age))+geom_point(aes(colour= factor(`Clicked.on.Ad`)))+
+  labs(title = "Scatter Plot of Age Distribution vs Area Income",
+       x = "Area Income",
+       y = "Age")
+```
+
+```{r}
+ggplot(df, aes(Area.Income, Daily.Internet.Usage))+
+  geom_point(aes(colour= factor(`Clicked.on.Ad`)))+
+  labs(title = "Scatter Plot of Area Income vs Daily Internet Usage",
+       x = "Area Income",
+       y = "Daily Internet Usage")
+```
+```{r}
+ggplot(df, aes(Age, Daily.Time.Spent.on.Site))+
+  geom_point(aes(colour= factor(`Clicked.on.Ad`)))+
+  labs(title = "Scatter Plot of Age Distribution vs Time Spent on Site",
+       x = "Age",
+       y = "Time Spent on Site")
+```
+
+```{r}
+ggplot(df, aes(Daily.Time.Spent.on.Site, Area.Income))+
+  geom_point(aes(colour= factor(`Clicked.on.Ad`)))+
+  labs(title = "Time spent on site vs Income",
+       x = "Daily Time Spent on Site",
+       y = "Income Distribution")
+```
+
+```{r}
+ggplot(df, aes(Age, Daily.Internet.Usage))+
+  geom_point(aes(colour= factor(`Clicked.on.Ad`)))+
+  labs(title = "Scatter Plot of Age Distribution vs Daily Usage",
+       x = "Age",
+       y = "Daily Usage")
+```
+
+### Conclusion
+In conclusion, from the analysis, the major factors that determine if a user will click an ad are the:
+
+1. Gender
+2. Daily time spent on the site
+3. Area Income
+4. Time of day and month
+
+From the analysis, we can conclude that:
+
+1. The Older people (above 35),were more likely to click on the course advert.
+2. The higher the person earns the less likely he/she will click the add.
+3. There is an equal chance for someone to either click on the advert or not
+4. The amount of time someone spent on the blog was inversely proportional to the probability of him/her clicking the add.
+
+### Recommendations
+From the analysis, I will recommend that:
+
+1. More adverts to be targeted to older people above 35
+2. The adverts to target low income (less than 60,000) population.
+3. The adverts to be designed in such a way that a user clearly sees it when he/she access the blog
