@@ -3,6 +3,7 @@ title: "Cryptography Course Advertisement Ad Analysis"
 author: "Brian Onyango"
 date: '2022-05-27'
 output:
+  pdf_document: default
   html_document: default
 ---
 
